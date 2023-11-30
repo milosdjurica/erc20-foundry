@@ -74,4 +74,32 @@ contract OZTokenTest is Test {
         assertEq(ozToken.allowance(bob, john), initialAllowance1);
         assertEq(ozToken.allowance(bob, lu), initialAllowance2);
     }
+
+    function testTransferToZeroAddress() public {
+        uint transferAmount = 50;
+
+        vm.prank(msg.sender);
+        // This should revert since the recipient address is zero
+        vm.expectRevert();
+        ozToken.transfer(address(0), transferAmount);
+    }
+
+    function testTransfer() public {
+        uint amount = 1000;
+        address receiver = address(0x1);
+        vm.prank(msg.sender);
+        ozToken.transfer(receiver, amount);
+        assertEq(ozToken.balanceOf(receiver), amount);
+    }
+
+    function testBalanceAfterTransfer() public {
+        uint amount = 1000;
+        address receiver = address(0x1);
+        console.log("msg.sender has : ", ozToken.balanceOf(msg.sender));
+        uint initialBalance = ozToken.balanceOf(msg.sender);
+        vm.prank(msg.sender);
+        ozToken.transfer(receiver, amount);
+        console.log("msg.sender has : ", ozToken.balanceOf(msg.sender));
+        assertEq(ozToken.balanceOf(msg.sender), initialBalance - amount);
+    }
 }
