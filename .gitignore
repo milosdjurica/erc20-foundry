@@ -4,6 +4,7 @@ out/
 
 
 /a
+/lib
 
 # Ignores development broadcast logs
 /broadcast
