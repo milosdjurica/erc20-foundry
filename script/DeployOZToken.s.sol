@@ -7,9 +7,10 @@ import {OZToken} from "../src/OZToken.sol";
 contract DeployOZToken is Script {
     uint public constant INITIAL_SUPPLY = 1000 ether;
 
-    function run() external {
+    function run() external returns (OZToken) {
         vm.startBroadcast();
-        new OZToken(INITIAL_SUPPLY);
+        OZToken ozToken = new OZToken(INITIAL_SUPPLY);
         vm.stopBroadcast();
+        return ozToken;
     }
 }
