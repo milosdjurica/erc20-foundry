@@ -47,4 +47,31 @@ contract OZTokenTest is Test {
         assertEq(ozToken.balanceOf(john), STARTING_BALANCE + transferAmount);
         assertEq(ozToken.balanceOf(bob), STARTING_BALANCE - transferAmount);
     }
+
+    function testNegativeAllowance() public {
+        uint initialAllowance = 100;
+        vm.prank(bob);
+        ozToken.approve(john, initialAllowance);
+
+        uint transferAmount = 200;
+
+        vm.prank(john);
+        // This should revert since the allowance is not sufficient
+        vm.expectRevert();
+        ozToken.transferFrom(bob, john, transferAmount);
+    }
+
+    function testMultipleApprovals() public {
+        uint initialAllowance1 = 100;
+        uint initialAllowance2 = 200;
+
+        vm.prank(bob);
+        ozToken.approve(john, initialAllowance1);
+
+        vm.prank(bob);
+        ozToken.approve(lu, initialAllowance2);
+
+        assertEq(ozToken.allowance(bob, john), initialAllowance1);
+        assertEq(ozToken.allowance(bob, lu), initialAllowance2);
+    }
 }
